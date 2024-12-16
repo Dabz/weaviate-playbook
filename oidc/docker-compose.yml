@@ -1,0 +1,47 @@
+---
+services:
+  weaviate:
+    command:
+    - --host
+    - 0.0.0.0
+    - --port
+    - '8080'
+    - --scheme
+    - http
+    image: cr.weaviate.io/semitechnologies/weaviate:1.28.0
+    ports:
+    - 8080:8080
+    - 50051:50051
+    volumes:
+    - ./data:/var/lib/weaviate
+    restart: on-failure:0
+    environment:
+      QUERY_DEFAULTS_LIMIT: 25
+      AUTHENTICATION_ANONYMOUS_ACCESS_ENABLED: 'true'
+      PERSISTENCE_DATA_PATH: '/var/lib/weaviate'
+      DEFAULT_VECTORIZER_MODULE: 'text2vec-ollama'
+      ENABLE_MODULES: 'text2vec-ollama,ref2vec-centroid,generative-ollama'
+      CLUSTER_HOSTNAME: 'node1'
+      AUTHENTICATION_OIDC_ENABLED: 'true'
+      AUTHENTICATION_OIDC_ISSUER: 'http://keycloak:7080/realms/weaviate'
+      AUTHENTICATION_OIDC_CLIENT_ID: 'weaviate'
+      AUTHENTICATION_OIDC_SKIP_CLIENT_ID_CHECK: 'true'
+      AUTHENTICATION_OIDC_USERNAME_CLAIM: 'sub'
+      LOG_LEVEL: debug
+
+  keycloak:
+    image: quay.io/keycloak/keycloak:26.0
+    environment:
+      KC_HOSTNAME: keycloak
+      KC_HOSTNAME_PORT: 7080
+      KC_HOSTNAME_STRICT_BACKCHANNEL: "true"
+      KEYCLOAK_ADMIN: admin
+      KEYCLOAK_ADMIN_PASSWORD: admin
+      KC_HEALTH_ENABLED: "true"
+      KC_LOG_LEVEL: info
+    ports:
+    - 7080:7080
+    - 9000:9000
+    command: ["start-dev", "--http-port=7080", "--import-realm"]
+    volumes:
+    - ./keycloak-import:/opt/keycloak/data/import
