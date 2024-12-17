@@ -1,0 +1,9 @@
+{
+    "host": "localhost",
+    "http_port": "8080",
+    "grpc_port": "50051",
+    "auth": {
+        "type": "api_key",
+        "api_key": "admin"
+    }
+}
