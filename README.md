@@ -4,6 +4,8 @@ This repository contains different set of examples to operate and use Weaviate.
 Those examples are not production ready and are there to provide example of configuration, usage and to be able to quickly test and understand certains feature. 
 This is a constant work in progress, Pull Requests are welcomed nad feel free to open an Issue if you would like further clarification or a new playbooks.
 
+Example have been build leveraging [Weaviate official docker images](https://weaviate.io/developers/weaviate/installation/docker-compose)
+
 ## Operational playbooks
 
 ### 3 nodes cluster
@@ -11,6 +13,17 @@ This is a constant work in progress, Pull Requests are welcomed nad feel free to
 This playbooks contains an example of configuration to run Weaviate as a cluster with 3 nodes and a replication factor of 3.
 NGINX is used as a load balancer to distribute read & write to the 3 nodes. 
 Prometheus and Grafana are also included to observe the proper distribution of read & write requests. 
+
+<details open>
+  <summary>**Important configuration**</summary>
+```yaml
+CLUSTER_HOSTNAME: 'node1'
+CLUSTER_GOSSIP_BIND_PORT: '7100'
+CLUSTER_DATA_BIND_PORT: '7101'
+RAFT_JOIN: 'node1,node2,node3'
+RAFT_BOOTSTRAP_EXPECT: 3
+```
+</details>
 
 ### Monitoring
 
