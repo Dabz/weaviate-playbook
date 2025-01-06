@@ -1,0 +1,22 @@
+---
+services:
+  weaviate:
+    command:
+    - --host
+    - 0.0.0.0
+    - --port
+    - '8080'
+    - --scheme
+    - http
+    image: cr.weaviate.io/semitechnologies/weaviate:1.28.2
+    ports:
+    - 8080:8080
+    - 50051:50051
+    volumes:
+    - ./data:/var/lib/weaviate
+    restart: on-failure:0
+    environment:
+      DEFAULT_VECTORIZER_MODULE: 'text2vec-ollama'
+      ENABLE_MODULES: 'text2vec-ollama,ref2vec-centroid,generative-ollama'
+      CLUSTER_HOSTNAME: 'node1'
+      PERSISTENCE_DATA_PATH: '/var/lib/weaviate'
