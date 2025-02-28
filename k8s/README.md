@@ -18,3 +18,9 @@ $> helm repo add prometheus-community https://prometheus-community.github.io/hel
 $> helm upgrade --install prometheus prometheus-community/kube-prometheus-stack  --namespace prometheus --values prometheus.yaml
 $> helm upgrade --install "weaviate"  weaviate/weaviate  --namespace "weaviate"  --values ./simple.yml
 ```
+
+## Accessing Grafana
+
+```bash
+kubectl port-forward -n prometheus svc/prometheus-grafana 8000:80
+```
