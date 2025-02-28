@@ -1,7 +1,7 @@
 image:
   # registry where weaviate image is stored
   registry: cr.weaviate.io
-  tag: 1.28.2
+  tag: 1.29.0
   repo: semitechnologies/weaviate
   pullPolicy: IfNotPresent
   pullSecrets: []
@@ -40,11 +40,11 @@ updateStrategy:
   type: RollingUpdate
 resources:
   requests:
-    cpu: '2000m'
-    memory: '8Gi'
+    cpu: '10m'
+    memory: '50Gi'
   limits:
-    cpu: '2000m'
-    memory: '8Gi'
+    cpu: '1000m'
+    memory: '50Gi'
 
 securityContext: {}
 
@@ -54,7 +54,7 @@ clusterDomain: cluster.local.
 
 storage:
   size: 100Gi
-  storageClassName: ""
+  storageClassName: "gp2"
 
 service:
   name: weaviate
@@ -204,7 +204,7 @@ env:
 
   # Set a MEM limit for the Weaviate Pod so it can help you both increase GC-related
   # performance as well as avoid GC-related out-of-memory (“OOM”) situations
-  GOMEMLIMIT: 14GiB
+  GOMEMLIMIT: 46GiB
 
   # Maximum results Weaviate can query with/without pagination
   # NOTE: Affects performance, do NOT set to a very high value.

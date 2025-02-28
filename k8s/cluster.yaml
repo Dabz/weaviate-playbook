@@ -1,0 +1,17 @@
+apiVersion: eksctl.io/v1alpha5
+kind: ClusterConfig
+
+metadata:
+  name: damien-cluster-3
+  region: eu-west-3
+
+nodeGroups:
+  - name: ng-1
+    instanceType: m7i.4xlarge
+    desiredCapacity: 3
+    volumeSize: 80
+    iam:
+      withAddonPolicies:
+        ebs: true
+        fsx: true
+        efs: true
