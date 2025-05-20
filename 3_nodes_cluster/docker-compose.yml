@@ -9,7 +9,7 @@ services:
       - '8080'
       - --scheme
       - http
-    image: cr.weaviate.io/semitechnologies/weaviate:1.29.1
+    image: cr.weaviate.io/semitechnologies/weaviate:1.30.3
     volumes:
     - ./data-1:/var/lib/weaviate
     restart: on-failure:0
@@ -20,6 +20,7 @@ services:
     env_file: ".env"
     environment:
       CLUSTER_HOSTNAME: 'weaviate-node-1'
+      GOMEMLIMIT: 2GiB
       QUERY_SLOW_LOG_ENABLED: true 
       QUERY_SLOW_LOG_THRESHOLD: 0ms
       GO_PROFILING_DISABLE: false
@@ -29,12 +30,11 @@ services:
       LOG_LEVEL: 'debug'
       ASYNC_INDEXING: true,
       PROMETHEUS_MONITORING_ENABLED: true
-      ENABLE_MODULES: 'text2vec-ollama,generative-ollama,ref2vec-centroid,text-spellcheck,autocorrect,backup-filesystem,backup-s3'
+      ENABLE_MODULES: 'text2vec-ollama,generative-ollama,ref2vec-centroid,backup-filesystem,backup-s3'
       QUERY_DEFAULTS_LIMIT: 25
       AUTHENTICATION_ANONYMOUS_ACCESS_ENABLED: 'true'
       PERSISTENCE_DATA_PATH: '/var/lib/weaviate'
       ENABLE_API_BASED_MODULES: 'true'
-      SPELLCHECK_INFERENCE_API: "http://text-spellcheck:8080"
 
       BACKUP_FILESYSTEM_PATH: '/tmp'
 
@@ -52,13 +52,14 @@ services:
       - '8081'
       - --scheme
       - http
-    image: cr.weaviate.io/semitechnologies/weaviate:1.29.1
+    image: cr.weaviate.io/semitechnologies/weaviate:1.30.3
     volumes:
     - ./data-2:/var/lib/weaviate
     restart: on-failure:0
     env_file: ".env"
     environment:
       CLUSTER_HOSTNAME: 'weaviate-node-2'
+      GOMEMLIMIT: 2GiB
 
       QUERY_SLOW_LOG_ENABLED: true 
       QUERY_SLOW_LOG_THRESHOLD: 0ms
@@ -66,12 +67,11 @@ services:
       LOG_LEVEL: 'debug'
       PROMETHEUS_MONITORING_ENABLED: true
       ASYNC_INDEXING: true,
-      ENABLE_MODULES: 'text2vec-ollama,generative-ollama,ref2vec-centroid,text-spellcheck,autocorrect,backup-filesystem,backup-s3'
+      ENABLE_MODULES: 'text2vec-ollama,generative-ollama,ref2vec-centroid,backup-filesystem,backup-s3'
       QUERY_DEFAULTS_LIMIT: 25
       AUTHENTICATION_ANONYMOUS_ACCESS_ENABLED: 'true'
       PERSISTENCE_DATA_PATH: '/var/lib/weaviate'
       ENABLE_API_BASED_MODULES: 'true'
-      SPELLCHECK_INFERENCE_API: "http://text-spellcheck:8080"
 
       BACKUP_FILESYSTEM_PATH: '/tmp'
 
@@ -90,13 +90,14 @@ services:
       - '8082'
       - --scheme
       - http
-    image: cr.weaviate.io/semitechnologies/weaviate:1.29.1
+    image: cr.weaviate.io/semitechnologies/weaviate:1.30.3
     volumes:
     - ./data-3:/var/lib/weaviate
     restart: on-failure:0
     env_file: ".env"
     environment:
       CLUSTER_HOSTNAME: 'weaviate-node-3'
+      GOMEMLIMIT: 2GiB
 
       QUERY_SLOW_LOG_ENABLED: true 
       QUERY_SLOW_LOG_THRESHOLD: 0ms
@@ -104,12 +105,11 @@ services:
       LOG_LEVEL: 'debug'
       PROMETHEUS_MONITORING_ENABLED: true
       ASYNC_INDEXING: true,
-      ENABLE_MODULES: 'text2vec-ollama,generative-ollama,ref2vec-centroid,text-spellcheck,autocorrect,backup-filesystem,backup-s3'
+      ENABLE_MODULES: 'text2vec-ollama,generative-ollama,ref2vec-centroid,backup-filesystem,backup-s3'
       QUERY_DEFAULTS_LIMIT: 25
       AUTHENTICATION_ANONYMOUS_ACCESS_ENABLED: 'true'
       PERSISTENCE_DATA_PATH: '/var/lib/weaviate'
       ENABLE_API_BASED_MODULES: 'true'
-      SPELLCHECK_INFERENCE_API: "http://text-spellcheck:8080"
 
       BACKUP_FILESYSTEM_PATH: '/tmp'
 
@@ -144,5 +144,3 @@ services:
     - 50051:50051
     volumes:
       - ./nginx.conf:/etc/nginx/nginx.conf:ro
-  text-spellcheck:
-    image: cr.weaviate.io/semitechnologies/text-spellcheck-model:pyspellchecker-d933122
