@@ -86,7 +86,7 @@ public class HybridQueryTest {
         for (var query : Dataset.TEST_DATA) {
             var queryResponse = collection.query.bm25(
                     new Bm25(
-                            new Bm25.Builder("query")
+                            new Bm25.Builder(query)
                                     .queryProperties()
                                     .limit(1)
                     )
