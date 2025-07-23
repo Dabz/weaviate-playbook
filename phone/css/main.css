@@ -1,0 +1,341 @@
+body {
+    font-family: Arial, sans-serif;
+    width: 80%;
+    margin: 0 auto;
+    padding: 20px;
+    margin-top: 30px;
+    background: #f6f8fa;
+    font-family: 'Inter', Arial, sans-serif;
+}
+
+.search-container {
+
+    background: #fff;
+    border-radius: 12px;
+    padding: 28px 24px 18px 24px;
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    box-shadow: none;
+    border: 1px solid #e5e7eb;
+}
+
+#searchInput {
+    flex: 1;
+    padding: 10px;
+    font-size: 16px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+}
+
+#searchType {
+    padding: 10px;
+    font-size: 16px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    background-color: white;
+}
+
+#searchButton {
+    padding: 10px 20px;
+    font-size: 16px;
+    background-color: #007bff;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+#searchButton:hover {
+    background-color: #0056b3;
+}
+
+.loading {
+    display: none;
+    text-align: center;
+    margin: 20px 0;
+}
+
+.error {
+    color: #dc3545;
+    padding: 10px;
+    margin: 10px 0;
+    border: 1px solid #dc3545;
+    border-radius: 4px;
+    background-color: #f8d7da;
+}
+
+.card {
+    background: white;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    margin: 20px 0;
+    margin-right: 20px;
+    padding: 20px;
+    float: left;
+}
+
+.card-title {
+    font-size: 1.2em;
+    font-weight: bold;
+    margin-bottom: 15px;
+    color: #333;
+    border-bottom: 2px solid #eee;
+    padding-bottom: 10px;
+}
+
+.final-answer {
+    background-color: #f8f9fa;
+    padding: 20px;
+    border-radius: 4px;
+    line-height: 1.6;
+    min-height: 100px;
+}
+
+.final-answer.typing {
+    position: relative;
+}
+
+.final-answer.typing::after {
+    content: '▋';
+    animation: blink 1s infinite;
+    color: #666;
+}
+
+@keyframes blink {
+    0%, 100% {
+        opacity: 1;
+    }
+    50% {
+        opacity: 0;
+    }
+}
+
+.final-answer h1, .final-answer h2, .final-answer h3 {
+    color: #333;
+    margin-top: 1.5em;
+    margin-bottom: 0.5em;
+}
+
+.final-answer p {
+    margin-bottom: 1em;
+}
+
+.final-answer ul, .final-answer ol {
+    margin-bottom: 1em;
+    padding-left: 2em;
+}
+
+.final-answer li {
+    margin-bottom: 0.5em;
+}
+
+.final-answer strong {
+    color: #333;
+}
+
+.final-answer a {
+    color: #007bff;
+    text-decoration: none;
+}
+
+.final-answer a:hover {
+    text-decoration: underline;
+}
+
+.final-answer code {
+    background-color: #f0f0f0;
+    padding: 2px 4px;
+    border-radius: 3px;
+    font-family: monospace;
+}
+
+.final-answer pre {
+    background-color: #f0f0f0;
+    padding: 15px;
+    border-radius: 4px;
+    overflow-x: auto;
+}
+
+.final-answer blockquote {
+    border-left: 4px solid #007bff;
+    margin: 1em 0;
+    padding-left: 1em;
+    color: #666;
+}
+
+.sources-list {
+    list-style: none;
+    padding: 0;
+}
+
+.source-item {
+    background-color: #f8f9fa;
+    padding: 10px;
+    margin: 5px 0;
+    border-radius: 4px;
+}
+
+.search-details {
+    font-family: monospace;
+    white-space: pre-wrap;
+    background-color: #f8f9fa;
+    padding: 10px;
+    border-radius: 4px;
+}
+
+.usage-info {
+    font-size: 0.9em;
+    color: #666;
+    margin-top: 10px;
+}
+
+.product-card {
+    background-color: white;
+    padding: 20px;
+    margin: 15px 0;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    transition: transform 0.2s ease;
+}
+
+.product-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+}
+
+.product-title {
+    font-weight: bold;
+    font-size: 1.2em;
+    margin-bottom: 10px;
+    color: #333;
+    line-height: 1.4;
+}
+
+.product-education {
+    color: #666;
+    font-size: 0.9em;
+    margin-bottom: 5px;
+    display: inline-block;
+    padding: 3px 8px;
+    background-color: #f0f0f0;
+    border-radius: 4px;
+}
+
+.product-experience {
+    color: #666;
+    font-size: 0.9em;
+    margin-bottom: 15px;
+    display: inline-block;
+    padding: 3px 8px;
+    background-color: #e8f4ff;
+    border-radius: 4px;
+    margin-left: 8px;
+}
+
+.product-price {
+    font-size: 1.3em;
+    font-weight: bold;
+    color: #2e7d32;
+    margin: 10px 0;
+    padding: 5px 0;
+    border-top: 1px solid #eee;
+    border-bottom: 1px solid #eee;
+}
+
+.product-description {
+    margin-bottom: 15px;
+    line-height: 1.6;
+    color: #444;
+}
+
+.product-url {
+    color: #007bff;
+    text-decoration: none;
+    font-size: 0.9em;
+    display: inline-block;
+    padding: 8px 12px;
+    background-color: #f0f7ff;
+    border-radius: 4px;
+    transition: background-color 0.2s ease;
+}
+
+.product-url:hover {
+    background-color: #e0f0ff;
+    text-decoration: none;
+}
+
+.top-right {
+    position: absolute;
+    top: 5px;
+    right: 50px;
+}
+
+.top-right p {
+    float: left;
+    margin-right: 10px;
+}
+
+.top-right p a {
+    color: #00acc1;
+}
+
+.modal {
+    display: none; /* Hidden by default */
+    position: fixed; /* Stay in place */
+    z-index: 1; /* Sit on top */
+    left: 0;
+    top: 0;
+    width: 100%; /* Full width */
+    height: 100%; /* Full height */
+    overflow: auto; /* Enable scroll if needed */
+    background-color: rgb(0, 0, 0); /* Fallback color */
+    background-color: rgba(0, 0, 0, 0.4); /* Black w/ opacity */
+}
+
+/* Modal Content/Box */
+.modal-content {
+    background-color: #fefefe;
+    margin: 15% auto; /* 15% from the top and centered */
+    padding: 20px;
+    border: 1px solid #888;
+    width: 80%; /* Could be more or less, depending on screen size */
+}
+
+/* The Close Button */
+.close {
+    color: #aaa;
+    float: right;
+    font-size: 28px;
+    font-weight: bold;
+}
+
+.close:hover,
+.close:focus {
+    color: black;
+    text-decoration: none;
+    cursor: pointer;
+}
+
+footer {
+    margin-top: 60px;
+    clear: both;
+    text-align: center;
+    color: #bbb;
+    font-size: 1em;
+    letter-spacing: 0.5px;
+    background: none;
+    border: none;
+}
+
+main {
+    max-width: 80%;
+    margin: 0 auto;
+}
+
+header {
+    background: #fff;
+    border-bottom: 1px solid #e5e7eb;
+    padding: 0 0 0 0;
+    margin-bottom: 32px;
+}

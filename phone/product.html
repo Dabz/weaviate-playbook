@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Query Agent</title>
+    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+    <link rel="stylesheet" href="/css/main.css">
+</head>
+<body style="background:#f6f8fa;font-family:'Inter',Arial,sans-serif;">
+<header style="background:#fff;border-bottom:1px solid #e5e7eb;padding:0 0 0 0;margin-bottom:32px;">
+    <div style="max-width:900px;margin:0 auto;display:flex;align-items:center;justify-content:space-between;height:64px;">
+        <div style="display:flex;align-items:center;gap:14px;">
+            <img src="https://img.icons8.com/ios-filled/40/007bff/shopping-cart.png" alt="Logo" style="height:36px;">
+            <span style="font-size:1.5em;font-weight:600;color:#222;letter-spacing:0.5px;">E-Shop</span>
+        </div>
+        <nav style="display:flex;gap:24px;">
+            <a href="/web" style="color:#007bff;font-weight:500;text-decoration:none;font-size:1.08em;">Chat</a>
+            <a href="/products" style="color:#007bff;font-weight:500;text-decoration:none;font-size:1.08em;">E-Shop</a>
+        </nav>
+    </div>
+</header>
+<main>
+    <section class="search-container">
+        <span style="font-size:1.3em;color:#007bff;margin-right:8px;">🔍</span>
+        <input type="text" id="searchInput" placeholder="Enter your query..." style="flex:1;">
+        <select id="searchType">
+            <option value="agent">Agent</option>
+            <option value="hybrid">Hybrid</option>
+            <option value="vector">Vector</option>
+            <option value="keyword">Keyword</option>
+        </select>
+        <button id="searchButton">Search</button>
+    </section>
+    <div class="loading" id="loading">Loading...</div>
+    <section id="results" style="margin-top:32px;"></section>
+</main>
+<footer>
+    &copy; 2025 Phone Provider 2000. All rights reserved.
+</footer>
+<script>
+    // Typewriter effect function
+    async function typeWriter(element, text, speed = 50) {
+        const words = text.split(' ');
+        element.innerHTML = '';
+        element.classList.add('typing');
+
+        text = ""
+
+        for (let i = 0; i < words.length; i++) {
+            const word = words[i];
+            text = text + word + " "
+            element.innerHTML = marked.parse(text)
+
+            // Add a small delay between words
+            await new Promise(resolve => setTimeout(resolve, speed));
+        }
+
+        element.classList.remove('typing');
+    }
+
+    async function performSearch() {
+        const query = document.getElementById('searchInput').value;
+        const searchType = document.getElementById('searchType').value;
+        if (!query.trim()) return;
+
+        const loading = document.getElementById('loading');
+        const results = document.getElementById('results');
+
+        loading.style.display = 'block';
+        results.innerHTML = '';
+
+        try {
+            const response = await fetch(`/products/query/${searchType}/${encodeURIComponent(query)}`);
+            if (!response.ok) {
+                throw new Error(`HTTP error! status: ${response.status}`);
+            }
+            const data = await response.json();
+
+            // Create the results display
+            let html = '';
+
+            // Final Answer Card
+            if (data.final_answer) {
+                html += `
+                            <div class="card">
+                                <div class="card-title">Answer</div>
+                                <div class="final-answer"></div>
+                            </div>
+                        `;
+            }
+
+            // Products Card
+            if (data.objects && data.objects.length > 0) {
+                html += `
+                            <div class="card">
+                                <div class="card-title">Products</div>
+                                ${data.objects.map(product => `
+                                    <div class="product-card">
+                                        <div class="product-title">${product.title}</div>
+                                        <div>
+                                            ${product.brand ? `<span class="product-brand">${product.brand}</span>` : ''}
+                                            ${product.category && product.category !== 'NaN' ? `<span class="product-category">${product.category}</span>` : ''}
+                                        </div>
+                                        ${product.price ? `<div class="product-price">$${product.price.toFixed(2)}</div>` : ''}
+                                        <div class="product-description">${product.description}</div>
+                                        ${product.url ? `<a href="${product.url}" target="_blank" class="product-url">View on Amazon</a>` : ''}
+                                    </div>
+                                `).join('')}
+                            </div>
+                        `;
+            }
+
+
+            // Search Details Card
+            if (data.searches && data.searches.length > 0) {
+                html += `
+                            <div class="card">
+                                <div class="card-title">Search Details</div>
+                                <div class="search-details">${JSON.stringify(data.searches, null, 2)}</div>
+                            </div>
+                        `;
+            }
+
+            // Sources Card
+            if (data.sources && data.sources.length > 0) {
+                html += `
+                            <div class="card">
+                                <div class="card-title">Sources</div>
+                                <ul class="sources-list">
+                                    ${data.sources.map(source => `
+                                        <li class="source-item">
+                                            Collection: ${source.collection}<br>
+                                            Object ID: ${source.object_id}
+                                        </li>
+                                    `).join('')}
+                                </ul>
+                            </div>
+                        `;
+            }
+
+            // Aggregations Card
+            if (data.aggregations && data.aggregations.length > 0) {
+                html += `
+                            <div class="card">
+                                <div class="card-title">Aggregations</div>
+                                <div class="search-details">
+                                    ${JSON.stringify(data.aggregations, null, 2)}
+                                </div>
+                            </div>
+                        `;
+            }
+
+            // Usage Info
+            if (data.usage) {
+                html += `
+                            <div class="card">
+                                <div class="card-title">Usage Information</div>
+                                <div class="usage-info">
+                                    Requests: ${data.usage.requests}<br>
+                                    Total Tokens: ${data.usage.total_tokens}<br>
+                                    Response Time: ${data.total_time.toFixed(2)}s
+                                </div>
+                            </div>
+                        `;
+            }
+
+            results.innerHTML = html;
+
+            // Start typewriter effect for final answer
+            if (data.final_answer) {
+                const finalAnswerElement = document.querySelector('.final-answer');
+                await typeWriter(finalAnswerElement, data.final_answer);
+            }
+
+        } catch (error) {
+            results.innerHTML = `<div class="error">Error: ${error.message}</div>`;
+        } finally {
+            loading.style.display = 'none';
+        }
+    }
+
+    document.getElementById('searchButton').addEventListener('click', performSearch);
+
+    document.getElementById('searchInput').addEventListener('keypress', function (e) {
+        if (e.key === 'Enter') {
+            performSearch();
+        }
+    });
+</script>
+</body>
+</html>

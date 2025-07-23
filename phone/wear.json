@@ -1,0 +1,50 @@
+[
+  {
+    "title": "Nike Air Zoom Pegasus 40",
+    "description": "Breathable and cushioned running shoe with responsive Zoom Air units.",
+    "category": "Running Shoes",
+    "brand": "Nike",
+    "url": "https://www.nike.com/t/air-zoom-pegasus-40",
+    "price": 130
+  },
+  {
+    "title": "Adidas Ultraboost Light",
+    "description": "Lightweight running shoe with high energy return and Primeknit upper.",
+    "category": "Running Shoes",
+    "brand": "Adidas",
+    "url": "https://www.adidas.com/us/ultraboost-light",
+    "price": 190
+  },
+  {
+    "title": "Nike Invincible 3",
+    "description": "Maximum cushioning for long runs with Flyknit upper and ZoomX foam.",
+    "category": "Running Shoes",
+    "brand": "Nike",
+    "url": "https://www.nike.com/t/invincible-3",
+    "price": 180
+  },
+  {
+    "title": "Adidas Adizero Adios Pro 3",
+    "description": "Elite racing shoe with carbon-infused ENERGYRODS and Lightstrike Pro foam.",
+    "category": "Running Shoes",
+    "brand": "Adidas",
+    "url": "https://www.adidas.com/us/adizero-adios-pro-3",
+    "price": 250
+  },
+  {
+    "title": "Nike ZoomX Vaporfly Next% 3",
+    "description": "High-performance racing shoe designed for speed and efficiency on race day.",
+    "category": "Running Shoes",
+    "brand": "Nike",
+    "url": "https://www.nike.com/t/zoomx-vaporfly-next-3",
+    "price": 260
+  },
+  {
+    "title": "Adidas Solarboost 5",
+    "description": "Daily trainer offering balance, comfort, and energy return for road runs.",
+    "category": "Running Shoes",
+    "brand": "Adidas",
+    "url": "https://www.adidas.com/us/solarboost-5",
+    "price": 140
+  }
+]
