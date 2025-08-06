@@ -8,7 +8,7 @@ services:
     - '8080'
     - --scheme
     - http
-    image: cr.weaviate.io/semitechnologies/weaviate:1.28.0
+    image: cr.weaviate.io/semitechnologies/weaviate:1.32.1
     ports:
     - 8080:8080
     - 50051:50051
@@ -17,8 +17,6 @@ services:
     restart: on-failure:0
     environment:
       PERSISTENCE_DATA_PATH: '/var/lib/weaviate'
-      DEFAULT_VECTORIZER_MODULE: 'text2vec-ollama'
-      ENABLE_MODULES: 'text2vec-ollama,generative-ollama'
 
       AUTHENTICATION_ANONYMOUS_ACCESS_ENABLED: 'false'
       AUTHORIZATION_ENABLE_RBAC: 'true'
@@ -27,7 +25,7 @@ services:
       AUTHENTICATION_APIKEY_ALLOWED_KEYS: 'admin,app'
       AUTHENTICATION_APIKEY_USERS: 'admin,app'
 
-      AUTHORIZATION_ADMIN_USERS: 'admin'
+      AUTHORIZATION_RBAC_ROOT_USERS: 'admin'
 volumes:
   weaviate_data:
 
