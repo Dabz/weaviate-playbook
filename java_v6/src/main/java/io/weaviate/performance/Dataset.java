@@ -1,7 +1,7 @@
 package io.weaviate.performance;
 
 public class Dataset {
-    public static final String COLLECTION_NAME = "ProductAds_gte";
+    public static final String COLLECTION_NAME = "ProductAds_gte_150M";
     public static final String[] TEST_DATA = new String[]{
             "trendy dress",
             "shoes",
