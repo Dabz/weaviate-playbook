@@ -7,7 +7,6 @@ import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 import io.weaviate.client6.v1.api.Config;
 import io.weaviate.client6.v1.api.WeaviateClient;
-import io.weaviate.client6.v1.api.collections.CollectionHandle;
 import io.weaviate.client6.v1.api.collections.query.ConsistencyLevel;
 import io.weaviate.client6.v1.api.collections.query.Hybrid;
 import io.weaviate.client6.v1.api.collections.query.Metadata;
@@ -59,29 +58,39 @@ public class HybridQueryTest {
         );
     }
 
-    public void test() throws Exception {
-        var client = getClient();
-        var collection = client.collections.use(Dataset.COLLECTION_NAME);
+    public void test(int threadCount) throws Exception {
+        var testDataset = getTestDataset();
         var queryLatencyHistogram = getHistogram();
 
-        var testDataset = getTestDataset(collection);
-
         var testStartTime = System.currentTimeMillis();
-        while ((System.currentTimeMillis() - testStartTime) < 30_000) {
-            for (Map.Entry<String, float[]> entry : testDataset.entrySet()) {
-                var start = System.currentTimeMillis();
-                var resp = collection.query.hybrid(new Hybrid(
-                                new Hybrid.Builder(entry.getKey())
-                                        .nearVector(new NearVector(new NearVector.Builder(entry.getValue())))
-                                        .limit(20)
-                                        .alpha(0.7f)
-                                        .returnMetadata(Metadata.MetadataField.SCORE)
-                                        .consistencyLevel(ConsistencyLevel.ONE)
-                        )
-                );
-                var end = System.currentTimeMillis();
-                queryLatencyHistogram.update(end - start);
-            }
+        for (int i = 0; i < threadCount; i++) {
+            Thread queryThread = new Thread(() -> {
+                WeaviateClient client = null;
+                try {
+                    client = getClient();
+                } catch (FileNotFoundException e) {
+                    throw new RuntimeException(e);
+                }
+                var collection = client.collections.use(Dataset.COLLECTION_NAME);
+                while ((System.currentTimeMillis() - testStartTime) < 300_000) {
+                    var randomIndex = (int) (Math.random() * testDataset.size());
+                    var query = testDataset.keySet().toArray()[randomIndex].toString();
+                    var embedding = testDataset.get(query);
+
+                    var start = System.currentTimeMillis();
+                    var resp = collection.query.hybrid(new Hybrid(
+                                    new Hybrid.Builder(query)
+                                            .nearVector(new NearVector(new NearVector.Builder(embedding)))
+                                            .limit(20)
+                                            .alpha(0.7f)
+                                            .consistencyLevel(ConsistencyLevel.ONE)
+                            )
+                    );
+                    var end = System.currentTimeMillis();
+                    queryLatencyHistogram.update(end - start);
+                }
+            });
+            queryThread.start();
         }
     }
 
@@ -96,7 +105,7 @@ public class HybridQueryTest {
         return queryLatency;
     }
 
-    private static Map<String, float[]> getTestDataset(CollectionHandle<Map<String, Object>> collection) throws IOException {
+    private static Map<String, float[]> getTestDataset() throws IOException {
         Gson gson = new Gson();
         String jsonFile = new String(Objects.requireNonNull(HybridQueryTest.class.getClassLoader().getResourceAsStream("embedding_loaded.json")).readAllBytes());
         JsonObject jsonObject = gson.fromJson(jsonFile, JsonObject.class);
@@ -117,8 +126,14 @@ public class HybridQueryTest {
 
     public static void main(String[] args) {
         HybridQueryTest app = new HybridQueryTest();
+        var threadCount = 100;
+
+        if (args.length > 0) {
+            threadCount = Integer.parseInt(args[0]);
+        }
+
         try {
-            app.test();
+            app.test(threadCount);
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
