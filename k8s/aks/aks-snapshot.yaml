@@ -1,0 +1,27 @@
+apiVersion: snapshot.storage.k8s.io/v1
+kind: VolumeSnapshot
+metadata:
+  name: weaviate-volume-snapshot-0
+spec:
+  volumeSnapshotClassName: weaviate-snapshot-class
+  source:
+    persistentVolumeClaimName: weaviate-data-weaviate-0
+
+---
+apiVersion: snapshot.storage.k8s.io/v1
+kind: VolumeSnapshot
+metadata:
+  name: weaviate-volume-snapshot-1
+spec:
+  volumeSnapshotClassName: weaviate-snapshot-class
+  source:
+    persistentVolumeClaimName: weaviate-data-weaviate-1
+---
+apiVersion: snapshot.storage.k8s.io/v1
+kind: VolumeSnapshot
+metadata:
+  name: weaviate-volume-snapshot-2
+spec:
+  volumeSnapshotClassName: weaviate-snapshot-class
+  source:
+    persistentVolumeClaimName: weaviate-data-weaviate-2

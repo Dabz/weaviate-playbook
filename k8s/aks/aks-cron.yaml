@@ -1,0 +1,42 @@
+apiVersion: batch/v1
+kind: CronJob
+metadata:
+  name: weaviate-pvc-snapshot-cron
+  namespace: weaviate
+spec:
+  schedule: "0 * * * *"   # Every hour
+  successfulJobsHistoryLimit: 12
+  failedJobsHistoryLimit: 12
+  jobTemplate:
+    spec:
+      template:
+        spec:
+          serviceAccountName: snapshoter
+          restartPolicy: OnFailure
+          containers:
+          - name: snapshot-weaviate
+            image: bitnami/kubectl:latest
+            command:
+              - /bin/sh
+              - -c
+              - |
+                # Creating new snapshots for all PVC
+                for i in `seq 0 2`; do
+                  SNAPSHOT_NAME="pvc-snapshot-weaviate-$i-$(date +%Y%m%d-%H%M%S)"
+                  cat <<EOF | kubectl apply -f -
+                  apiVersion: snapshot.storage.k8s.io/v1
+                  kind: VolumeSnapshot
+                  metadata:
+                    name: ${SNAPSHOT_NAME}
+                    namespace: weaviate
+                  spec:
+                    volumeSnapshotClassName: weaviate-snapshot-class
+                    source:
+                      persistentVolumeClaimName: weaviate-data-weaviate-$i
+                EOF
+                done
+
+                # Deleting snapshots older than 7 days
+                kubectl get volumesnapshots -o json \
+                  | jq -r '.items[] | select(.metadata.creationTimestamp < "'$(date -d '7 days ago' --iso-8601=seconds)'") | .metadata.name' \
+                  | xargs -r kubectl delete volumesnapshot

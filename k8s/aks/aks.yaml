@@ -1,0 +1,93 @@
+image:
+  registry: cr.weaviate.io
+  tag: 1.35.7
+  repo: semitechnologies/weaviate
+  pullPolicy: IfNotPresent
+  pullSecrets: []
+
+
+replicas: 3
+
+podManagementPolicy: Parallel
+updateStrategy:
+  type: RollingUpdate
+resources:
+  requests:
+    cpu: '200m'
+    memory: '2G'
+  limits:
+    cpu: '2000m'
+    memory: '2G'
+
+clusterDomain: cluster.local.
+
+storage:
+  size: 10Gi
+  storageClassName: "managed-csi-premium"
+
+service:
+  name: weaviate
+  ports:
+    - name: http
+      protocol: TCP
+      port: 80
+  type: LoadBalancer
+  loadBalancerSourceRanges: []
+  clusterIP:
+  annotations: {}
+
+grpcService:
+  enabled: true
+  name: weaviate-grpc
+  ports:
+    - name: grpc
+      protocol: TCP
+      port: 50051
+  type: LoadBalancer
+  loadBalancerSourceRanges: []
+  clusterIP:
+  annotations: {}
+
+serviceMonitor:
+  enabled: false
+  interval: 30s
+  scrapeTimeout: 10s
+
+# Weaviate Config
+#
+# The following settings allow you to customize Weaviate to your needs, for
+# example set authentication and authorization options. See weaviate docs
+# (https://www.weaviate.io/developers/weaviate/) for all
+# configuration.
+authentication:
+  enabled: false
+  apikey:
+    enabled: true
+    allowed_keys:
+      - secretAdminApiKey
+    users:
+      - admin
+  oidc:
+    enabled: false
+
+authorization:
+  anonymous_access: true
+  rbac:
+    enabled: false
+    root_users:
+     - admin
+  admin_list:
+    enabled: false
+
+env:
+  CLUSTER_GOSSIP_BIND_PORT: 7000
+  CLUSTER_DATA_BIND_PORT: 7001
+  RAFT_BOOTSTRAP_TIMEOUT: 600
+  RAFT_ENABLE_FQDN_RESOLVER: false
+  PROMETHEUS_MONITORING_ENABLED: true
+  PROMETHEUS_MONITORING_GROUP: false
+  ASYNC_INDEXING: true
+  QUERY_MAXIMUM_RESULTS: "1000000"
+  TRACK_VECTOR_DIMENSIONS: false
+  LIMIT_RESOURCES: true
+  GO_PROFILING_DISABLE: false
